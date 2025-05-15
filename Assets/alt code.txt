@@ -1,0 +1,46 @@
+  if(Input.GetMouseButtonDown(0)){
+            
+            float PlusY= 45f;
+            //float PlusXrotation= 5f;
+            //float PlusZrotation= 5f;
+
+            Plus= new Vector3(5f,0f,5f);
+
+            RotateCamera(PlusY);
+            CameraDistance+= Plus; 
+            //MoveCamera(PlusXrotation,PlusZrotation);
+
+
+            print("rotar izq");
+        }
+        if(Input.GetMouseButtonDown(1)){
+            
+            float TakeY= -45f;
+            //float TakeXrotation= 5f;
+            //float TakeZrotation= 5f;
+            Take= new Vector3(-5f,0f,-5f);
+
+
+            RotateCamera(TakeY);
+            CameraDistance-= Take; 
+            //MoveCamera(TakeXrotation,TakeZrotation);
+
+            print("rotar der");
+        }
+
+        void RotateCamera(float YRotation){
+            Quaternion CameraRotation = Camara.transform.rotation;
+
+            Quaternion newRotation = Quaternion.Euler(CameraRotation.eulerAngles.x, CameraRotation.eulerAngles.y + YRotation, CameraRotation.eulerAngles.z);
+
+            // Aplicar la nueva rotación
+            Camara.transform.rotation = newRotation;
+
+
+        }
+
+        void MoveCamera(Vector3 CameraDistance){
+
+            transform.position = player.position +  CameraDistance;
+
+        }
