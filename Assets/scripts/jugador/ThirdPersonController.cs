@@ -132,7 +132,7 @@ public class ThirdPersonController : MonoBehaviour
             posicion= player.position;
             GameObject Clon= Instantiate(Bomb, posicion,Quaternion.identity);
 
-            StartCoroutine(Order(Clon)); // Ahora se llama correctamente la espera antes de destruir
+            StartCoroutine(Order(Clon));
             Debug.Log("boom");
         }
 

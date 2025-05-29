@@ -33,7 +33,7 @@
 
             Quaternion newRotation = Quaternion.Euler(CameraRotation.eulerAngles.x, CameraRotation.eulerAngles.y + YRotation, CameraRotation.eulerAngles.z);
 
-            // Aplicar la nueva rotaci髇
+            // Aplicar la nueva rotaci锟絥
             Camara.transform.rotation = newRotation;
 
 
@@ -44,3 +44,208 @@
             transform.position = player.position +  CameraDistance;
 
         }
+
+
+CameraDistance.x-= Mathf.Cos(Plus.x);
+CameraDistance.z-= Mathf.Sin(Plus.z);
+
+float x = Mathf.Cos(angulo) * radio; // Movimiento en X
+float z = Mathf.Sin(angulo) * radio; // Movimiento en Z
+
+
+CameraDistance.x+= Take.x;
+CameraDistance.z+= Take.z;
+
+if(Input.GetMouseButton(0)){
+            
+            //float PlusY= 45f;
+            //float PlusXrotation= 5f;
+            //float PlusZrotation= 5f;
+
+            Plus= new Vector3(2f,0f,2f);
+            RotLimitL+= 2;
+
+            //RotateCamera(PlusY);
+            //CameraDistance.x-= Plus.x;
+            //CameraDistance.z+= Plus.z; 
+            //MoveCamera(PlusXrotation,PlusZrotation);
+
+            if(RotLimitL>=0f){
+
+                if(RotLimitL>=24f){
+                    // 24 to 36 
+                    CameraDistance.x-= Plus.x;
+                    CameraDistance.z-= Plus.z;
+                    print("Indice");
+                    print(RotLimitL);
+                }
+                else if(RotLimitL>=12f){
+                    // 12 to 24
+                    CameraDistance.x+= Plus.x;
+                    CameraDistance.z-= Plus.z;
+                    print(RotLimitL);
+                    print("No indice");
+
+                    
+                }
+                else{
+                    // From 0 to 12
+                    CameraDistance.x+= Plus.x;
+                    CameraDistance.z+= Plus.z;
+                    print(RotLimitL);
+                }
+
+            }
+            else{
+                // Position from -12 to 0
+                CameraDistance.x-= Plus.x;
+                CameraDistance.z+= Plus.z;
+
+
+
+                print(RotLimitL);
+            }
+            //print(RightRotation.x);  
+
+            if(RotLimitL==36f){
+                RotLimitL=-12f;
+                CameraDistance= new Vector3(0,10,-12);
+
+                Quaternion CameraRotationReset= Camara.transform.rotation;
+                Quaternion newRotation = Quaternion.Euler(CameraRotationReset.eulerAngles.x,0f, CameraRotationReset.eulerAngles.z);
+
+                // Aplicar la nueva rotaci贸n
+                Camara.transform.rotation = newRotation;
+
+            }
+
+
+
+            float CameraRotation= 15f;
+
+            RotateCamera(CameraRotation);
+
+            // invertir rotaci贸n
+
+            print("rotar izq");
+        }
+
+
+
+ if(Input.GetMouseButton(1)){
+            
+
+            //float TakeXrotation= 5f;
+            //float TakeZrotation= 5f;
+            Take= new Vector3(2f,0f,2);
+            //Vector3 RightRotation = new Vector3(Take.x - RotLimit,0f,2f);
+            RotLimitR-= 2; 
+
+            //Vector3 BreakPointRight1= new Vector3(2f,0f,2f) + player.transform.position;
+            //Vector3 BreakPointRight2= new Vector3(6f,0f,2f) + CameraDistance;
+            //Vector3 BreakPointRight3= new Vector3(6f,0f,2f) + CameraDistance;
+
+            if(RotLimitR<=0f){
+
+                if(RotLimitR<=-24f){
+                    // -24 to -36 
+                    CameraDistance.x+= Take.x;
+                    CameraDistance.z-= Take.z;
+                    print("Indice");
+                    print(RotLimitR);
+                }
+                else if(RotLimitR<=-12f){
+                    // -12 to -24
+                    CameraDistance.x-= Take.x;
+                    CameraDistance.z-= Take.z;
+                    print(RotLimitR);
+                    print("No indice");
+
+                    
+                }
+                else{
+                    // From 0 to -12
+                    CameraDistance.x-= Take.x;
+                    CameraDistance.z+= Take.z;
+                    print(RotLimitR);
+                }
+
+            }
+            else{
+                // Position from 12 to 0
+                CameraDistance.x+= Take.x;
+                CameraDistance.z+= Take.z;
+
+
+
+                print(RotLimitR);
+            }
+            //print(RightRotation.x);
+              
+
+            if(RotLimitR==-36f){
+                RotLimitR=12f;
+                CameraDistance= new Vector3(0,10,-12);
+
+                Quaternion CameraRotationReset= Camara.transform.rotation;
+                Quaternion newRotation = Quaternion.Euler(CameraRotationReset.eulerAngles.x,0f, CameraRotationReset.eulerAngles.z);
+
+                // Aplicar la nueva rotaci贸n
+                Camara.transform.rotation = newRotation;
+
+            }
+
+            // Invertir rotaci贸n
+           
+            
+
+            float CameraRotation= -15f;
+
+            RotateCamera(CameraRotation);
+
+            //print(BreakPointRight1);
+            //print("c:");
+            //print(Camara.transform.position);
+            
+            
+
+            //RotateCamera(TakeY);
+            //CameraDistance-= Take; 
+            //MoveCamera(TakeXrotation,TakeZrotation);
+            //Camara.transform.position = Vector3.Slerp(CameraDistance, BreakPointRight, 2f);
+
+            //print("rotar der");
+        }       
+
+//print(BreakPointRight1);
+            //print("c:");
+            //print(Camara.transform.position);
+            
+            
+
+            //RotateCamera(TakeY);
+            //CameraDistance-= Take; 
+            //MoveCamera(TakeXrotation,TakeZrotation);
+            //Camara.transform.position = Vector3.Slerp(CameraDistance, BreakPointRight, 2f);
+
+            //print("rotar der");
+
+
+            //float PlusY= 45f;
+            //float PlusXrotation= 5f;
+            //float PlusZrotation= 5f;
+
+            //RotateCamera(PlusY);
+            //CameraDistance.x-= Plus.x;
+            //CameraDistance.z+= Plus.z; 
+            //MoveCamera(PlusXrotation,PlusZrotation);
+
+
+//Vector3 BreakPointRight1= new Vector3(2f,0f,2f) + player.transform.position;
+            //Vector3 BreakPointRight2= new Vector3(6f,0f,2f) + CameraDistance;
+            //Vector3 BreakPointRight3= new Vector3(6f,0f,2f) + CameraDistance;
+
+
+            
+            //float TakeXrotation= 5f;
+            //float TakeZrotation= 5f;

@@ -23,6 +23,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] float ZoomSens = 100;
     [SerializeField] float MinFieldOfView = 35;
     [SerializeField] float MaxFieldOfView = 75;
+    [SerializeField] float ScrollSensivity = 35f;
     [Header("Camera position and rotation configuration")]
     public Camera Camara;
     Transform CameraLocation;
@@ -40,8 +41,12 @@ public class CameraController : MonoBehaviour
     public Vector3 Plus;
     public Vector3 Take;
     [Header("The rotation limit")]
-    float RotLimitR= 12f;
-    float RotLimitL= -12f;
+    float RotLimitR= 120f;
+    float RotLimitL= -120f;
+
+
+    Vector3 initialCameraPosition;
+    Quaternion initialCameraRotation;
 
     private void Awake() {
         Camara = Camera.main;
@@ -85,7 +90,7 @@ public class CameraController : MonoBehaviour
         {
             // Cambio el campo de vision de la camara
             print(Input.GetAxis("Mouse ScrollWheel"));
-            Camera.main.fieldOfView -= Input.GetAxis("Mouse ScrollWheel") * Time.deltaTime * ZoomSens;
+            Camera.main.fieldOfView -= Input.GetAxis("Mouse ScrollWheel") * Time.deltaTime * ZoomSens + ScrollSensivity;
             Camera.main.fieldOfView = Mathf.Clamp(Camera.main.fieldOfView, MinFieldOfView, MaxFieldOfView);
         }
            
@@ -114,156 +119,237 @@ public class CameraController : MonoBehaviour
 
             // Roto la camara
             //transform.rotation = Quaternion.Euler(-mouseY, mouseX, 0);
-
+            
             print("2");
         }
            
-        // Down para
+        // add Down to make it 
         if(Input.GetMouseButton(0)){
-            
-            //float PlusY= 45f;
-            //float PlusXrotation= 5f;
-            //float PlusZrotation= 5f;
-
-            Plus= new Vector3(2f,0f,2f);
-            RotLimitL+= 2;
-
-            //RotateCamera(PlusY);
-            //CameraDistance.x-= Plus.x;
-            //CameraDistance.z+= Plus.z; 
-            //MoveCamera(PlusXrotation,PlusZrotation);
-
-            if(RotLimitL>=0f){
-
-                if(RotLimitL>=24f){
-                    // 24 to 36 
-                    CameraDistance.x-= Plus.x;
-                    CameraDistance.z-= Plus.z;
-                    print("Indice");
-                    print(RotLimitL);
-                }
-                else if(RotLimitL>=12f){
-                    // 12 to 24
-                    CameraDistance.x+= Plus.x;
-                    CameraDistance.z-= Plus.z;
-                    print(RotLimitL);
-                    print("No indice");
-
-                    
-                }
-                else{
-                    // From 0 to 12
-                    CameraDistance.x+= Plus.x;
-                    CameraDistance.z+= Plus.z;
-                    print(RotLimitL);
-                }
-
-            }
-            else{
-                // Position from -12 to 0
-                CameraDistance.x-= Plus.x;
-                CameraDistance.z+= Plus.z;
-                print(RotLimitL);
-            }
-            //print(RightRotation.x);  
-
-            if(RotLimitL==36f){
-                RotLimitL=-12f;
-                CameraDistance= new Vector3(0,10,-12);
-
-                Quaternion CameraRotationReset= Camara.transform.rotation;
-                Quaternion newRotation = Quaternion.Euler(CameraRotationReset.eulerAngles.x,0f, CameraRotationReset.eulerAngles.z);
-
-                // Aplicar la nueva rotación
-                Camara.transform.rotation = newRotation;
-
-            }
-
-            float CameraRotation= 15f;
-
-            RotateCamera(CameraRotation);
-
-            print("rotar izq");
-        }
-        if(Input.GetMouseButton(1)){
-            
-
-            //float TakeXrotation= 5f;
-            //float TakeZrotation= 5f;
-            Take= new Vector3(2f,0f,2f);
-            //Vector3 RightRotation = new Vector3(Take.x - RotLimit,0f,2f);
-            RotLimitR-= 2; 
-
-            //Vector3 BreakPointRight1= new Vector3(2f,0f,2f) + player.transform.position;
-            //Vector3 BreakPointRight2= new Vector3(6f,0f,2f) + CameraDistance;
-            //Vector3 BreakPointRight3= new Vector3(6f,0f,2f) + CameraDistance;
-
-            if(RotLimitR<=0f){
-
-                if(RotLimitR<=-24f){
+            if(RotLimitR<=0f){ // Invert the right rotation
+                Take= new Vector3(20f,0f,20);
+                //Vector3 RightRotation = new Vector3(Take.x - RotLimit,0f,2f);
+                RotLimitR+= 20;
+                print("invertidaaaaaaaaaaaaaaaaaaaaa");
+                if(RotLimitR<=-240f){
                     // -24 to -36 
-                    CameraDistance.x+= Take.x;
-                    CameraDistance.z-= Take.z;
-                    print("Indice");
+                    CameraDistance.x-= Mathf.Cos(Take.x);
+                    CameraDistance.z+= Mathf.Sin(Take.z);
+                    print("invertida");
                     print(RotLimitR);
                 }
-                else if(RotLimitR<=-12f){
+                else if(RotLimitR<=-120f){
                     // -12 to -24
-                    CameraDistance.x-= Take.x;
-                    CameraDistance.z-= Take.z;
-                    print(RotLimitR);
-                    print("No indice");
+                    CameraDistance.x+= Mathf.Cos(Take.x);
+                    CameraDistance.z+= Mathf.Sin(Take.z);
+                    print("invertida");
 
                     
                 }
                 else{
                     // From 0 to -12
-                    CameraDistance.x-= Take.x;
-                    CameraDistance.z+= Take.z;
+                    CameraDistance.x+= Mathf.Cos(Take.x);
+                    CameraDistance.z-= Mathf.Sin(Take.z);
                     print(RotLimitR);
+                    print("invertidaaaaaaaaaaaaaaaaaaaaa");
                 }
 
+                float CameraRotation= 15f;
+
+                RotateCamera(CameraRotation);
+            }
+            else if(RotLimitR<=120f ){
+                Take= new Vector3(2f,0f,2);
+                //Vector3 RightRotation = new Vector3(Take.x - RotLimit,0f,2f);
+                RotLimitR+= 20;
+                CameraDistance.x-= Mathf.Cos(Take.x);
+                CameraDistance.z-= Mathf.Sin(Take.z);
+
+                float CameraRotation= 15f;
+
+                RotateCamera(CameraRotation);
+
+            }
+            // Normal left rotation
+            else{
+                Plus= new Vector3(20f,0f,20f);
+                RotLimitL+= 20;
+
+                if(RotLimitL>=0f){
+
+                    if(RotLimitL>=240f){
+                        // 24 to 36 
+                        CameraDistance.x-= Mathf.Cos(Plus.x);
+                        CameraDistance.z-= Mathf.Sin(Plus.z);
+                        print("Indice");
+                        print(RotLimitL);
+                    }
+                    else if(RotLimitL>=120f){
+                        // 12 to 24
+                        CameraDistance.x+=  Mathf.Cos(Plus.x);
+                        CameraDistance.z-= Mathf.Sin(Plus.z);
+                        print(RotLimitL);
+                        print("No indice");
+                    }
+                    else{
+                        // From 0 to 12
+                        CameraDistance.x+= Mathf.Cos(Plus.x);
+                        CameraDistance.z+= Mathf.Sin(Plus.z);
+                        print("Caso extraño");
+                        print(RotLimitL);
+                    }
+                }
+                else{
+                    // Position from -12 to 0
+                    CameraDistance.x-= Mathf.Cos(Plus.x);
+                    CameraDistance.z+= Mathf.Sin(Plus.z);
+
+
+
+                    print(RotLimitL);
+                }
+                //print(RightRotation.x);  
+
+                if(RotLimitL==360f){
+                    RotLimitL=-120f;
+                    CameraDistance= new Vector3(0,10,-12);
+
+                    Quaternion CameraRotationReset= Camara.transform.rotation;
+                    Quaternion newRotation = Quaternion.Euler(CameraRotationReset.eulerAngles.x,0f, CameraRotationReset.eulerAngles.z);
+
+                    // Aplicar la nueva rotación
+                    Camara.transform.rotation = newRotation;
+
+                }
+
+                float CameraRotation= 15f;
+
+                RotateCamera(CameraRotation);
+                print("rotar izq");
+            }
+
+        }
+        if(Input.GetMouseButton(1)){
+            
+            if(RotLimitL>=0f){
+                    Plus= new Vector3(20f,0f,20f);
+                    RotLimitL-= 20;
+                if(RotLimitL>=240f){
+                    // 24 to 36 
+                    CameraDistance.x+= Mathf.Cos(Plus.x);
+                    CameraDistance.z+= Mathf.Sin(Plus.z);
+                    print("Caso 3");
+                    print(RotLimitL);
+                }
+                else if(RotLimitL>=120f){
+                    // 12 to 24
+                    CameraDistance.x-= Mathf.Cos(Plus.x);
+                    CameraDistance.z+= Mathf.Sin(Plus.z);
+                    print(RotLimitL);
+                    print("Caso 2");
+                }
+                else{
+                    // From 0 to 12
+                    CameraDistance.x-=  Mathf.Cos(Plus.x);
+                    CameraDistance.z-= Mathf.Sin(Plus.z);
+                    print(RotLimitL);
+                    print("Caso 1");
+                }              
+
+                float CameraRotation= -15f;
+
+                RotateCamera(CameraRotation);
+            }
+            else if(RotLimitL>=-120f){
+                Plus= new Vector3(20f,0f,20f);
+                RotLimitL-= 20;
+                // Position from -12 to 0
+                CameraDistance.x+= Mathf.Cos(Plus.x);
+                CameraDistance.z-= Mathf.Sin(Plus.z);
+
+                float CameraRotation= -15f;
+
+                RotateCamera(CameraRotation);
+                print(RotLimitL);
+                print("Caso 0");
             }
             else{
-                // Position from 12 to 0
-                CameraDistance.x+= Take.x;
-                CameraDistance.z+= Take.z;
+                //Normal rotation
+                Take= new Vector3(20f,0f,20);
+                //Vector3 RightRotation = new Vector3(Take.x - RotLimit,0f,2f);
+                RotLimitR-= 20; 
+
+                if(RotLimitR<=0f){
+
+                    if(RotLimitR<=-240f){
+                        // -24 to -36 
+                        CameraDistance.x+= Mathf.Cos(Take.x);
+                        CameraDistance.z-= Mathf.Sin(Take.z);
+                        print("Indice");
+                        print(RotLimitR);
+                    }
+                    else if(RotLimitR<=-120f){
+                        // -12 to -24
+                        CameraDistance.x-= Mathf.Cos(Take.x);
+                        CameraDistance.z-= Mathf.Sin(Take.z);
+                        print(RotLimitR);
+                        print("No indice");
+
+                        
+                    }
+                    else{
+                        // From 0 to -12
+                        CameraDistance.x-= Mathf.Cos(Take.x);
+                        CameraDistance.z+= Mathf.Sin(Take.z);
+                        print(RotLimitR);
+                    }
+
+                }
+                else{
+                    // Position from 12 to 0
+                    CameraDistance.x+= Mathf.Cos(Take.x);
+                    CameraDistance.z+= Mathf.Sin(Take.z);
 
 
 
-                print(RotLimitR);
+                    print(RotLimitR);
+                }
+                //print(RightRotation.x);
+                
+
+                if(RotLimitR==-360f){
+                    RotLimitR=120f;
+                    CameraDistance= new Vector3(0,10,-12);
+
+                    Quaternion CameraRotationReset= Camara.transform.rotation;
+                    Quaternion newRotation = Quaternion.Euler(CameraRotationReset.eulerAngles.x,0f, CameraRotationReset.eulerAngles.z);
+
+                    // Aplicar la nueva rotación
+                    Camara.transform.rotation = newRotation;
+
+                }
+
+                float CameraRotation= -15f;
+
+                RotateCamera(CameraRotation);
             }
-            //print(RightRotation.x);  
+                
 
-            if(RotLimitR==-36f){
-                RotLimitR=12f;
+            
+        }
+
+        if(Input.GetMouseButton(1) && Input.GetMouseButton(0)){
+                RotLimitR=120f;
+                RotLimitL=-120f;
                 CameraDistance= new Vector3(0,10,-12);
 
                 Quaternion CameraRotationReset= Camara.transform.rotation;
                 Quaternion newRotation = Quaternion.Euler(CameraRotationReset.eulerAngles.x,0f, CameraRotationReset.eulerAngles.z);
 
-                // Aplicar la nueva rotación
+                    // Aplicar la nueva rotación
                 Camara.transform.rotation = newRotation;
-
-            }
-
-            float CameraRotation= -15f;
-
-            RotateCamera(CameraRotation);
-
-            //print(BreakPointRight1);
-            //print("c:");
-            //print(Camara.transform.position);
-            
-            
-
-            //RotateCamera(TakeY);
-            //CameraDistance-= Take; 
-            //MoveCamera(TakeXrotation,TakeZrotation);
-            //Camara.transform.position = Vector3.Slerp(CameraDistance, BreakPointRight, 2f);
-
-            //print("rotar der");
         }
+
+        transform.LookAt(player);
 
         void RotateCamera(float YRotation){
             Quaternion CameraRotation = Camara.transform.rotation;
@@ -282,12 +368,12 @@ public class CameraController : MonoBehaviour
 
         }
 
-        void MoveX()
+        void InvertRight(float RotLimitR)
         {
-
+            
         }
 
-        void MoveZ()
+        void InvertLeft(float RotLimitL)
         {
 
 
