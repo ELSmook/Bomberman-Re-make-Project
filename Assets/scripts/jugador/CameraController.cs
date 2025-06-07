@@ -37,6 +37,7 @@ public class CameraController : MonoBehaviour
     Transform player;
     [Header("The distance between the player and the camera (Default is X=0, Y=10 and Z=-12)")]
     public Vector3 CameraDistance;
+    public float CameraSpeed= -2.5f;
     [Header("The fraction in which the camera rotates around (Default is X=2 and Z=2")]
     public Vector3 Plus;
     public Vector3 Take;
@@ -126,29 +127,29 @@ public class CameraController : MonoBehaviour
         // add Down to make it 
         if(Input.GetMouseButton(0)){
             if(RotLimitR<=0f){ // Invert the right rotation
-                Take= new Vector3(20f,0f,20);
+                Take= new Vector3(20f,0f,20f);
                 //Vector3 RightRotation = new Vector3(Take.x - RotLimit,0f,2f);
                 RotLimitR+= 20;
                 print("invertidaaaaaaaaaaaaaaaaaaaaa");
                 if(RotLimitR<=-240f){
                     // -24 to -36 
-                    CameraDistance.x-= Mathf.Cos(Take.x);
-                    CameraDistance.z+= Mathf.Sin(Take.z);
+                    CameraDistance.x-= Mathf.Cos(Take.x) * CameraSpeed * Time.deltaTime;
+                    CameraDistance.z+= Mathf.Sin(Take.z)* CameraSpeed * Time.deltaTime;
                     print("invertida");
                     print(RotLimitR);
                 }
                 else if(RotLimitR<=-120f){
                     // -12 to -24
-                    CameraDistance.x+= Mathf.Cos(Take.x);
-                    CameraDistance.z+= Mathf.Sin(Take.z);
+                    CameraDistance.x+= Mathf.Cos(Take.x)* CameraSpeed * Time.deltaTime;
+                    CameraDistance.z+= Mathf.Sin(Take.z)* CameraSpeed * Time.deltaTime;
                     print("invertida");
 
                     
                 }
                 else{
                     // From 0 to -12
-                    CameraDistance.x+= Mathf.Cos(Take.x);
-                    CameraDistance.z-= Mathf.Sin(Take.z);
+                    CameraDistance.x+= Mathf.Cos(Take.x)* CameraSpeed * Time.deltaTime;
+                    CameraDistance.z-= Mathf.Sin(Take.z)* CameraSpeed * Time.deltaTime;
                     print(RotLimitR);
                     print("invertidaaaaaaaaaaaaaaaaaaaaa");
                 }
@@ -158,11 +159,11 @@ public class CameraController : MonoBehaviour
                 RotateCamera(CameraRotation);
             }
             else if(RotLimitR<=120f ){
-                Take= new Vector3(2f,0f,2);
+                Take= new Vector3(20f,0f,20);
                 //Vector3 RightRotation = new Vector3(Take.x - RotLimit,0f,2f);
                 RotLimitR+= 20;
-                CameraDistance.x-= Mathf.Cos(Take.x);
-                CameraDistance.z-= Mathf.Sin(Take.z);
+                CameraDistance.x-= Mathf.Cos(Take.x)* CameraSpeed * Time.deltaTime;
+                CameraDistance.z-= Mathf.Sin(Take.z)* CameraSpeed * Time.deltaTime;
 
                 float CameraRotation= 15f;
 
@@ -178,30 +179,30 @@ public class CameraController : MonoBehaviour
 
                     if(RotLimitL>=240f){
                         // 24 to 36 
-                        CameraDistance.x-= Mathf.Cos(Plus.x);
-                        CameraDistance.z-= Mathf.Sin(Plus.z);
+                        CameraDistance.x-= Mathf.Cos(Plus.x) * CameraSpeed * Time.deltaTime;
+                        CameraDistance.z-= Mathf.Sin(Plus.z)* CameraSpeed * Time.deltaTime;
                         print("Indice");
                         print(RotLimitL);
                     }
                     else if(RotLimitL>=120f){
                         // 12 to 24
-                        CameraDistance.x+=  Mathf.Cos(Plus.x);
-                        CameraDistance.z-= Mathf.Sin(Plus.z);
+                        CameraDistance.x+=  Mathf.Cos(Plus.x)* CameraSpeed * Time.deltaTime;
+                        CameraDistance.z-= Mathf.Sin(Plus.z)* CameraSpeed * Time.deltaTime;
                         print(RotLimitL);
                         print("No indice");
                     }
                     else{
                         // From 0 to 12
-                        CameraDistance.x+= Mathf.Cos(Plus.x);
-                        CameraDistance.z+= Mathf.Sin(Plus.z);
+                        CameraDistance.x+= Mathf.Cos(Plus.x)* CameraSpeed * Time.deltaTime;
+                        CameraDistance.z+=Mathf.Sin(Plus.z)* CameraSpeed * Time.deltaTime;
                         print("Caso extraño");
                         print(RotLimitL);
                     }
                 }
                 else{
                     // Position from -12 to 0
-                    CameraDistance.x-= Mathf.Cos(Plus.x);
-                    CameraDistance.z+= Mathf.Sin(Plus.z);
+                    CameraDistance.x-= Mathf.Cos(Plus.x)* CameraSpeed * Time.deltaTime;
+                    CameraDistance.z+= Mathf.Sin(Plus.z)* CameraSpeed * Time.deltaTime;
 
 
 
@@ -235,22 +236,22 @@ public class CameraController : MonoBehaviour
                     RotLimitL-= 20;
                 if(RotLimitL>=240f){
                     // 24 to 36 
-                    CameraDistance.x+= Mathf.Cos(Plus.x);
-                    CameraDistance.z+= Mathf.Sin(Plus.z);
+                    CameraDistance.x+= Mathf.Cos(Plus.x)* CameraSpeed * Time.deltaTime;
+                    CameraDistance.z+= Mathf.Sin(Plus.z)* CameraSpeed * Time.deltaTime;
                     print("Caso 3");
                     print(RotLimitL);
                 }
                 else if(RotLimitL>=120f){
                     // 12 to 24
-                    CameraDistance.x-= Mathf.Cos(Plus.x);
-                    CameraDistance.z+= Mathf.Sin(Plus.z);
+                    CameraDistance.x-= Mathf.Cos(Plus.x)* CameraSpeed * Time.deltaTime;
+                    CameraDistance.z+= Mathf.Sin(Plus.z) * CameraSpeed * Time.deltaTime;
                     print(RotLimitL);
                     print("Caso 2");
                 }
                 else{
                     // From 0 to 12
-                    CameraDistance.x-=  Mathf.Cos(Plus.x);
-                    CameraDistance.z-= Mathf.Sin(Plus.z);
+                    CameraDistance.x-=  Mathf.Cos(Plus.x)* CameraSpeed * Time.deltaTime;
+                    CameraDistance.z-= Mathf.Sin(Plus.z)* CameraSpeed * Time.deltaTime;
                     print(RotLimitL);
                     print("Caso 1");
                 }              
@@ -263,8 +264,8 @@ public class CameraController : MonoBehaviour
                 Plus= new Vector3(20f,0f,20f);
                 RotLimitL-= 20;
                 // Position from -12 to 0
-                CameraDistance.x+= Mathf.Cos(Plus.x);
-                CameraDistance.z-= Mathf.Sin(Plus.z);
+                CameraDistance.x+= Mathf.Cos(Plus.x)* CameraSpeed * Time.deltaTime;
+                CameraDistance.z-= Mathf.Sin(Plus.z)* CameraSpeed * Time.deltaTime;
 
                 float CameraRotation= -15f;
 
@@ -282,15 +283,15 @@ public class CameraController : MonoBehaviour
 
                     if(RotLimitR<=-240f){
                         // -24 to -36 
-                        CameraDistance.x+= Mathf.Cos(Take.x);
-                        CameraDistance.z-= Mathf.Sin(Take.z);
+                        CameraDistance.x+= Mathf.Cos(Take.x) * CameraSpeed * Time.deltaTime;
+                        CameraDistance.z-= Mathf.Sin(Take.z)* CameraSpeed * Time.deltaTime;
                         print("Indice");
                         print(RotLimitR);
                     }
                     else if(RotLimitR<=-120f){
                         // -12 to -24
-                        CameraDistance.x-= Mathf.Cos(Take.x);
-                        CameraDistance.z-= Mathf.Sin(Take.z);
+                        CameraDistance.x-= Mathf.Cos(Take.x) * CameraSpeed * Time.deltaTime;
+                        CameraDistance.z-= Mathf.Sin(Take.z) * CameraSpeed * Time.deltaTime;
                         print(RotLimitR);
                         print("No indice");
 
@@ -298,16 +299,16 @@ public class CameraController : MonoBehaviour
                     }
                     else{
                         // From 0 to -12
-                        CameraDistance.x-= Mathf.Cos(Take.x);
-                        CameraDistance.z+= Mathf.Sin(Take.z);
+                        CameraDistance.x-= Mathf.Cos(Take.x) * CameraSpeed * Time.deltaTime;
+                        CameraDistance.z+= Mathf.Sin(Take.z) * CameraSpeed * Time.deltaTime;
                         print(RotLimitR);
                     }
 
                 }
                 else{
                     // Position from 12 to 0
-                    CameraDistance.x+= Mathf.Cos(Take.x);
-                    CameraDistance.z+= Mathf.Sin(Take.z);
+                    CameraDistance.x+= Mathf.Cos(Take.x) * CameraSpeed * Time.deltaTime;
+                    CameraDistance.z+= Mathf.Sin(Take.z)* CameraSpeed * Time.deltaTime;
 
 
 
