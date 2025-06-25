@@ -50,11 +50,16 @@ public class ThirdPersonController : MonoBehaviour
     [Header("Bomb Configuration")]
     public GameObject Bomb;
     public Vector3 posicion;
-    
+    public float KnockbackForce= 10f;
+    public float ActionBombRange= 5000f;
+    //bool canKickBomb= false;
+    private Camera ActionCamera;
+    //int layerMask = 1 << 8;
+
+    //private Camera Camara;
 
     void Start()
     {
-
         // Obtengo los componenetes de mi jugador
         cc = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
@@ -63,7 +68,9 @@ public class ThirdPersonController : MonoBehaviour
         // Configuro los parametros del collider 
         StandingColliderHeight = cc.height;
         StandingCollierCenter =  cc.center;
+        GameObject FindCam = GameObject.FindWithTag("action");
 
+        ActionCamera = FindCam.GetComponentInChildren<Camera>();
     }
 
     // Update is only being used here to identify keys and trigger animations
@@ -134,6 +141,54 @@ public class ThirdPersonController : MonoBehaviour
 
             StartCoroutine(Order(Clon));
             Debug.Log("boom");
+        }
+
+        // Kick bomb with X
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            Vector3 screenCenter = new Vector3(Screen.width / 2f, Screen.height / 2f, 0f);
+            Ray ray = ActionCamera.ScreenPointToRay(screenCenter);
+            Debug.DrawRay(ray.origin, ray.direction * 1000.0f, Color.red, 2.0f);
+            RaycastHit hit;
+            print("i shot!");
+            if(Physics.Raycast(ray, out hit, ActionBombRange)){
+                Debug.Log(hit.collider.name); // Mostrará el nombre del objeto impactado
+                Bomb Bomb = hit.collider.gameObject.GetComponent<Bomb>();
+                print("im hitting it!");
+
+                if (Bomb != null){
+                    Bomb.KnockbackEntity(transform,KnockbackForce);
+                }   
+                else{
+                    print("im not hitting it!");
+                }
+            }
+
+        }
+
+        // Pick up bomb with C
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+
+            Vector3 screenCenter = new Vector3(Screen.width / 2f, Screen.height / 2f, 0f);
+            Ray ray = ActionCamera.ScreenPointToRay(screenCenter);
+            Debug.DrawRay(ray.origin, ray.direction * 1000.0f, Color.red, 2.0f);
+            RaycastHit hit;
+            print("i shot!");
+            if(Physics.Raycast(ray, out hit, ActionBombRange)){
+                Debug.Log(hit.collider.name); 
+                Bomb Bomb = hit.collider.gameObject.GetComponent<Bomb>();
+
+                if (Bomb != null){
+                    
+                    // obtener el lugar actual del jugador y sumarle el equivalente a estar encima de el
+                    // una funcion obtiene esas coordenadas y mueve el objeto encima sumando o restando lo que le falta para estar
+                }   
+                else{
+                    print("im not hitting it!");
+                }
+            }
+
         }
 
         HeadHittingDetect();
@@ -234,9 +289,13 @@ public class ThirdPersonController : MonoBehaviour
 
     IEnumerator Order(GameObject GameObject)
     {
-        yield return new WaitForSecondsRealtime(5);
+        yield return new WaitForSecondsRealtime(10);
         Destroy(GameObject);
     }
+    //OnCollisionEnter OnTriggerEnter
 
+    
+
+    
 
 }

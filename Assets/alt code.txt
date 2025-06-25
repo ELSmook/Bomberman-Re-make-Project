@@ -249,3 +249,23 @@ if(Input.GetMouseButton(0)){
             
             //float TakeXrotation= 5f;
             //float TakeZrotation= 5f;
+
+
+
+
+            private void OnCollisionEnter(Collision other)
+    {
+        //Ray ray = Camara.ScreenPointToRay(Input.mousePosition);
+        //RaycastHit hit;
+        //if(Physics.Raycast(ray, out hit, 10000.0f,layerMask)){
+        if (other.CompareTag("bomb"))  
+        {
+            print("esto explota");
+            canKickBomb= true;
+            Bomb Bomb = other.GetComponent<Collider>().gameObject.GetComponent<Bomb>();
+            Bomb.KnockbackEntity(transform);
+        }
+        //}
+        
+
+    }
