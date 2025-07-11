@@ -67,6 +67,7 @@
     <Compile Include="Assets\scripts\bombs\bomb behavior.cs" />
     <Compile Include="Assets\scripts\jugador\CameraController.cs" />
     <Compile Include="Assets\scripts\Enemy\IA prueba.cs" />
+    <Compile Include="Assets\scripts\general\Attributes.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\alt code.txt" />

@@ -269,3 +269,54 @@ if(Input.GetMouseButton(0)){
         
 
     }
+
+//  transform.position is for the object that is currently executing any function
+                    //transform.position = Bomb.transform.position + ObjectAbove;
+
+                    // obtener el lugar actual del jugador y sumarle el equivalente a estar encima de el
+                    // una funcion obtiene esas coordenadas y mueve el objeto encima sumando o restando lo que le falta para estar
+
+
+
+
+
+if (Input.GetKeyDown(KeyCode.C))
+{
+    if (!isHolding)
+    {
+        Vector3 screenCenter = new Vector3(Screen.width / 2f, Screen.height / 2f, 0f);
+        Ray ray = ActionCamera.ScreenPointToRay(screenCenter);
+        Debug.DrawRay(ray.origin, ray.direction * 1000.0f, Color.red, 2.0f);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, ActionBombRange))
+        {
+            Debug.Log(hit.collider.name); 
+            BombFunctions = hit.collider.gameObject.GetComponent<Bomb>();
+            BombBoxCollider = hit.collider.gameObject.GetComponent<BoxCollider>();
+            BombObject = hit.collider.gameObject;
+
+            if (BombFunctions != null)
+            {
+                isHolding = true;
+                Vector3 ObjectAbove = playerPosition.transform.position + AbovePlayer;
+
+                print(ObjectAbove);
+
+                BombObject.transform.position = ObjectAbove;
+                BombBoxCollider.transform.position = ObjectAbove;
+
+                BombFunctions.gravityState(isHolding);
+                BombObject.transform.SetParent(playerObject.transform);
+            }
+            else
+            {
+                print("im not hitting it!");
+            }
+        }
+    }
+    else
+    {
+        print("¡Ya estás sosteniendo una bomba!");
+        // aquí podrías agregar lógica para soltarla si lo deseas
+    }

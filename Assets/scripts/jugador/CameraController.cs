@@ -23,7 +23,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] float ZoomSens = 100;
     [SerializeField] float MinFieldOfView = 35;
     [SerializeField] float MaxFieldOfView = 75;
-    [SerializeField] float ScrollSensivity = 35f;
+    [SerializeField] float ScrollSensivity = 5f;
     [Header("Camera position and rotation configuration")]
     public Camera Camara;
     Transform CameraLocation;
@@ -91,7 +91,7 @@ public class CameraController : MonoBehaviour
         {
             // Cambio el campo de vision de la camara
             print(Input.GetAxis("Mouse ScrollWheel"));
-            Camera.main.fieldOfView -= Input.GetAxis("Mouse ScrollWheel") * Time.deltaTime * ZoomSens + ScrollSensivity;
+            Camera.main.fieldOfView -= Input.GetAxis("Mouse ScrollWheel") * Time.deltaTime * ZoomSens * ScrollSensivity;
             Camera.main.fieldOfView = Mathf.Clamp(Camera.main.fieldOfView, MinFieldOfView, MaxFieldOfView);
         }
            
@@ -124,7 +124,7 @@ public class CameraController : MonoBehaviour
             print("2");
         }
            
-        // add Down to make it 
+        // add Down to make it move pressing move by move
         if(Input.GetMouseButton(0)){
             if(RotLimitR<=0f){ // Invert the right rotation
                 Take= new Vector3(20f,0f,20f);

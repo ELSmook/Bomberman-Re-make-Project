@@ -45,7 +45,8 @@ public class ThirdPersonController : MonoBehaviour
 
     Animator animator;
     CharacterController cc;
-    Transform player;
+    Transform playerPosition;
+    GameObject playerObject;
 
     [Header("Bomb Configuration")]
     public GameObject Bomb;
@@ -54,6 +55,11 @@ public class ThirdPersonController : MonoBehaviour
     public float ActionBombRange= 5000f;
     //bool canKickBomb= false;
     private Camera ActionCamera;
+    public Vector3 AbovePlayer= new Vector3(0, 2,0);
+    //public Vector3 FixAbovePlayer= new Vector3(0, 2,);
+    bool isHolding = false;
+    private GameObject BombObject;
+    private Bomb BombFunctions;
     //int layerMask = 1 << 8;
 
     //private Camera Camara;
@@ -63,7 +69,10 @@ public class ThirdPersonController : MonoBehaviour
         // Obtengo los componenetes de mi jugador
         cc = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
-        player = GameObject.FindWithTag("Point").transform;
+        // Player coordinates
+        playerPosition = GameObject.FindWithTag("Point").transform;
+        // Gameobject Model of the player
+        playerObject = GameObject.FindWithTag("Point");
    
         // Configuro los parametros del collider 
         StandingColliderHeight = cc.height;
@@ -136,7 +145,7 @@ public class ThirdPersonController : MonoBehaviour
        // Spawn bomb with Z
         if (Input.GetKeyDown(KeyCode.Z))
         {
-            posicion= player.position;
+            posicion= playerPosition.position;
             GameObject Clon= Instantiate(Bomb, posicion,Quaternion.identity);
 
             StartCoroutine(Order(Clon));
@@ -170,30 +179,62 @@ public class ThirdPersonController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.C))
         {
 
-            Vector3 screenCenter = new Vector3(Screen.width / 2f, Screen.height / 2f, 0f);
-            Ray ray = ActionCamera.ScreenPointToRay(screenCenter);
-            Debug.DrawRay(ray.origin, ray.direction * 1000.0f, Color.red, 2.0f);
-            RaycastHit hit;
-            print("i shot!");
-            if(Physics.Raycast(ray, out hit, ActionBombRange)){
-                Debug.Log(hit.collider.name); 
-                Bomb Bomb = hit.collider.gameObject.GetComponent<Bomb>();
+            if (isHolding==false)
+            {
 
-                if (Bomb != null){
-                    
-                    // obtener el lugar actual del jugador y sumarle el equivalente a estar encima de el
-                    // una funcion obtiene esas coordenadas y mueve el objeto encima sumando o restando lo que le falta para estar
-                }   
-                else{
-                    print("im not hitting it!");
+                Vector3 screenCenter = new Vector3(Screen.width / 2f, Screen.height / 2f, 0f);
+                Ray ray = ActionCamera.ScreenPointToRay(screenCenter);
+                Debug.DrawRay(ray.origin, ray.direction * 1000.0f, Color.red, 2.0f);
+                RaycastHit hit;
+                //print("i shot!");
+                if(Physics.Raycast(ray, out hit, ActionBombRange)){
+                    Debug.Log(hit.collider.name);
+                    // tenia bomb 
+                    //GetComponent<BoxCollider>().bounds.center
+                    BombFunctions = hit.collider.gameObject.GetComponent<Bomb>();
+                    BoxCollider BombBoxCollider = hit.collider.gameObject.GetComponent<BoxCollider>();
+                    BombObject = hit.collider.gameObject;
+                    //Rigidbody BombRJ= hit.collider.gameObject.GetComponent<Rigidbody>();
+                    //BoxCollider box = Bomb.GetComponent<BoxCollider>();
+                    //bool isHolding = false;
+
+                    if (BombFunctions != null){
+                        
+                        //
+                        isHolding = true;
+                        Vector3 ObjectAbove= playerPosition.transform.position + AbovePlayer;
+
+                        print(ObjectAbove);
+
+                        BombObject.transform.position= ObjectAbove;
+                        BombBoxCollider.transform.position=ObjectAbove;
+
+                        // usinggravity in the rigid body 
+                        // becomes false so the bomb can stay still above the player s head
+                        BombFunctions.gravityState(isHolding);
+                        BombObject.transform.SetParent(playerObject.transform);
+                        //BombRJ.useGravity = false;
+                        
+                    }   
+                    else{
+                        print("im not hitting it!");
+                    }
                 }
             }
+            else{
+                isHolding = false;
+                BombObject.transform.SetParent(null, true);
+                BombFunctions.gravityState(isHolding);
+                BombFunctions.KnockbackEntityFixed(transform,KnockbackForce);
 
+            }
         }
 
         HeadHittingDetect();
 
     }
+
+
 
 
    // Movieminto en fixed update
