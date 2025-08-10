@@ -361,6 +361,7 @@
 -analyzer:"C:/Program Files/Unity/Hub/Editor/2022.3.24f1/Editor/Data/Tools/Unity.SourceGenerators/Unity.Properties.SourceGenerator.dll"
 -analyzer:"C:/Program Files/Unity/Hub/Editor/2022.3.24f1/Editor/Data/Tools/Unity.SourceGenerators/Unity.SourceGenerators.dll"
 "Assets/scripts/bombs/bomb behavior.cs"
+"Assets/scripts/bombs/bomb explosion.cs"
 "Assets/scripts/Enemy/IA prueba.cs"
 "Assets/scripts/general/Attributes.cs"
 "Assets/scripts/jugador/CameraController.cs"

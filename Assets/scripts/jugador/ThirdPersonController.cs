@@ -50,6 +50,7 @@ public class ThirdPersonController : MonoBehaviour
 
     [Header("Bomb Configuration")]
     public GameObject Bomb;
+    [SerializeField] GameObject Explosion;
     public Vector3 posicion;
     public float KnockbackForce= 10f;
     public float ActionBombRange= 5000f;
@@ -60,6 +61,9 @@ public class ThirdPersonController : MonoBehaviour
     bool isHolding = false;
     private GameObject BombObject;
     private Bomb BombFunctions;
+    public int BombDamage;
+    public Vector3 BombClonePosition;
+    public Vector3 FixPosition;
     //int layerMask = 1 << 8;
 
     //private Camera Camara;
@@ -146,9 +150,13 @@ public class ThirdPersonController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Z))
         {
             posicion= playerPosition.position;
-            GameObject Clon= Instantiate(Bomb, posicion,Quaternion.identity);
+            GameObject BombClone= Instantiate(Bomb, posicion - FixPosition,Quaternion.identity);
 
-            StartCoroutine(Order(Clon));
+            //GameObject ExplosionClone= Instantiate(Explosion,BombClone.transform.position,Quaternion.identity);
+            //yield return new WaitForSecondsRealtime(8f);
+
+            StartCoroutine(Order(BombClone));
+            //StartCoroutine(CreateExplosionAfterDelay(Explosion,BombClone,FixPosition));
             Debug.Log("boom");
         }
 
@@ -328,14 +336,21 @@ public class ThirdPersonController : MonoBehaviour
         }
     }
 
-    IEnumerator Order(GameObject GameObject)
+    IEnumerator Order(GameObject BombClone)
     {
         yield return new WaitForSecondsRealtime(10);
-        Destroy(GameObject);
+        Destroy(BombClone);
+        //Destroy(ExplosionClone,8f);
     }
     //OnCollisionEnter OnTriggerEnter
 
-    
+    // Unused test function
+    IEnumerator CreateExplosionAfterDelay(GameObject ExplosionClone,GameObject BombClone,Vector3 FixPosition)
+    {
+        yield return new WaitForSeconds(8f);
+        GameObject ExplosionInstance = Instantiate(ExplosionClone,BombClone.transform.position - FixPosition, Quaternion.identity);
+        Destroy(ExplosionInstance,3f);
+    }
 
     
 

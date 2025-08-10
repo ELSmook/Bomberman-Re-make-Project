@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Attributes : MonoBehaviour
 {
-    [SerializeField] int Life;
+    public int Life;
 
 
     // Start is called before the first frame update
